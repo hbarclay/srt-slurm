@@ -127,9 +127,9 @@ class DynamoFrontend:
                 f"if [ -f '{script_path}' ]; then bash '{script_path}'; else echo 'WARNING: {script_path} not found'; fi"
             )
 
-        # Dynamo installation (required for dynamo frontend)
-        # Skip if dynamo.install is False (container already has dynamo installed)
-        if not config.profiling.enabled and config.dynamo.install:
+        # Dynamo installation (always required for dynamo frontend, even during profiling —
+        # workers switch to sglang.launch_server but the frontend still needs dynamo)
+        if config.dynamo.install:
             parts.append(config.dynamo.get_install_commands())
 
         if not parts:
