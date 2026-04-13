@@ -538,7 +538,8 @@ class ProfilingConfig:
                 env[f"PROFILE_{phase_key}_STOP_STEP"] = str(phase_config.stop_step)
 
         if self.is_torch:
-            env["SGLANG_TORCH_PROFILER_DIR"] = f"{profile_dir}/{mode}"
+            # Use container path (/logs/profiles/...) since log_dir is mounted at /logs
+            env["SGLANG_TORCH_PROFILER_DIR"] = f"/logs/profiles/{mode}"
 
         return env
 
