@@ -69,10 +69,9 @@ class WorkerStageMixin:
                 f"if [ -f '{script_path}' ]; then bash '{script_path}'; else echo 'WARNING: {script_path} not found'; fi"
             )
 
-        # 2. Dynamo installation (required for dynamo.sglang when using dynamo frontend and not profiling)
-        # When profiling is enabled, we use sglang.launch_server directly (no dynamo)
+        # 2. Dynamo installation (required for dynamo.sglang when using dynamo frontend)
         # Skip if dynamo.install is False (container already has dynamo installed)
-        if self.config.frontend.type == "dynamo" and not self.config.profiling.enabled and self.config.dynamo.install:
+        if self.config.frontend.type == "dynamo" and self.config.dynamo.install:
             parts.append(self.config.dynamo.get_install_commands())
 
         if not parts:
