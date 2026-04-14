@@ -220,11 +220,11 @@ class SGLangProtocol:
         leader_ip = get_hostname_ip(endpoint_nodes[0])
         dist_init_port = 29500
 
-        # Choose Python module based on frontend type.
-        # dynamo.sglang works with the dynamo frontend (NATS/etcd registration).
-        # sglang.launch_server is standalone (used with sglang frontend).
-        # Note: profiling (SGLANG_TORCH_PROFILER_DIR) works with both modules.
-        use_sglang = frontend_type == "sglang"
+        # Choose Python module:
+        # - sglang.launch_server: standalone, exposes HTTP on port 30000 (needed for /start_profile)
+        # - dynamo.sglang: registers with NATS/etcd for dynamo frontend routing
+        # Profiling requires /start_profile on workers, so always use sglang.launch_server
+        use_sglang = frontend_type == "sglang" or profiling_enabled
         python_module = "sglang.launch_server" if use_sglang else "dynamo.sglang"
 
         # Get served model name from config
