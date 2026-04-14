@@ -227,6 +227,9 @@ def start_srun_process(
         srun_cmd.extend(["--container-image", str(container_image)])
         srun_cmd.append("--no-container-entrypoint")
         srun_cmd.append("--no-container-mount-home")
+        # Pass through all host environment variables (needed for NVIDIA container
+        # runtime vars like CUPTI profiling support, HF_TOKEN, etc.)
+        srun_cmd.extend(["--export", "ALL"])
 
         if container_mounts:
             mount_str = ",".join(f"{host}:{container}" for host, container in container_mounts.items())
