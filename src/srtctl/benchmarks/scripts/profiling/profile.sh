@@ -75,18 +75,11 @@ start_profile_on_worker() {
         return 1
     fi
     
-    # Determine activities based on profiler type
-    local ACTIVITIES
-    if [[ -n "${SGLANG_TORCH_PROFILER_DIR}" ]]; then
-        ACTIVITIES='["CPU", "GPU", "MEM"]'
-    else
-        ACTIVITIES='["CUDA_PROFILER"]'
-    fi
-    
-    echo "Starting profiling on http://${ip}:30000 (steps ${start_step}-${stop_step})"
+    echo "Starting profiling on http://${ip}:30000 (num_steps=${num_steps})"
+    # Match single-node benchmark_serving.py profile request exactly
     curl -sS -X POST "http://${ip}:30000/start_profile" \
         -H "Content-Type: application/json" \
-        -d "{\"start_step\": ${start_step}, \"num_steps\": ${num_steps}, \"activities\": ${ACTIVITIES}, \"record_shapes\": true}" || true
+        -d "{\"num_steps\": ${num_steps}, \"merge_profiles\": true, \"profile_by_stage\": true}" || true
 }
 
 # Check if we have any workers to profile
