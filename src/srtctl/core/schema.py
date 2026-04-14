@@ -541,6 +541,9 @@ class ProfilingConfig:
             # Use container path (/logs/profiles/...) since log_dir is mounted at /logs
             env["SGLANG_TORCH_PROFILER_DIR"] = f"/logs/profiles/{mode}"
 
+        # Enable CUPTI profiling capability in container (required for GPU kernel tracing)
+        env["NVIDIA_DRIVER_CAPABILITIES"] = "compute,utility,profiling"
+
         return env
 
     def get_nsys_prefix(self, output_file: str) -> list[str]:
