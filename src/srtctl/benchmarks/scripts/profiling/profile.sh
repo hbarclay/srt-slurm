@@ -86,7 +86,7 @@ start_profile_on_worker() {
     echo "Starting profiling on http://${ip}:30000 (steps ${start_step}-${stop_step})"
     curl -sS -X POST "http://${ip}:30000/start_profile" \
         -H "Content-Type: application/json" \
-        -d "{\"start_step\": ${start_step}, \"num_steps\": ${num_steps}, \"activities\": ${ACTIVITIES}}" || true
+        -d "{\"start_step\": ${start_step}, \"num_steps\": ${num_steps}, \"activities\": ${ACTIVITIES}, \"record_shapes\": true, \"with_stack\": false}" || true
 }
 
 # Check if we have any workers to profile
