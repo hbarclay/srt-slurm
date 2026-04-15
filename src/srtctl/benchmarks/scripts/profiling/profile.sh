@@ -76,10 +76,12 @@ start_profile_on_worker() {
     fi
     
     echo "Starting profiling on http://${ip}:30000 (num_steps=${num_steps})"
-    # Match single-node benchmark_serving.py profile request exactly
+    # For disaggregated serving, workers are already stage-separated (prefill or decode only),
+    # so profile_by_stage is not needed. Using it causes crashes with forward_mode values
+    # like SPLIT_PREFILL that the stage handler doesn't recognize.
     curl -sS -X POST "http://${ip}:30000/start_profile" \
         -H "Content-Type: application/json" \
-        -d "{\"num_steps\": ${num_steps}, \"merge_profiles\": true, \"profile_by_stage\": true}" || true
+        -d "{\"num_steps\": ${num_steps}, \"merge_profiles\": true}" || true
 }
 
 # Check if we have any workers to profile
