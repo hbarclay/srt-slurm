@@ -75,13 +75,14 @@ start_profile_on_worker() {
         return 1
     fi
     
-    echo "Starting profiling on http://${ip}:30000 (num_steps=${num_steps})"
+    echo "Starting profiling on http://${ip}:30000 (start_step=${start_step}, num_steps=${num_steps})"
     # For disaggregated serving, workers are already stage-separated (prefill or decode only),
     # so profile_by_stage is not needed. Using it causes crashes with forward_mode values
     # like SPLIT_PREFILL that the stage handler doesn't recognize.
+    # start_step skips warmup iterations to keep traces small.
     curl -sS -X POST "http://${ip}:30000/start_profile" \
         -H "Content-Type: application/json" \
-        -d "{\"num_steps\": ${num_steps}, \"merge_profiles\": true}" || true
+        -d "{\"start_step\": ${start_step}, \"num_steps\": ${num_steps}, \"merge_profiles\": true}" || true
 }
 
 # Check if we have any workers to profile
